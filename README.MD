@@ -4,8 +4,8 @@ This project is all about building a optimized file uploader. Rather than storin
 
 # challanges
 
-1. creating the api from scratch
-   While I am no stranger to APIs, building one that's as optimized as we want it to be is definitely going to be a challenge. In particular, figuring out how to manage unique user IDs across a user base of 10,000+ people is going to be interesting. But hey, that's my job. This will be a fun project
+creating the api from scratch
+While I am no stranger to APIs, building one that's as optimized as we want it to be is definitely going to be a challenge. In particular, figuring out how to manage unique user IDs across a user base of 10,000+ people is going to be interesting. But hey, that's my job. This will be a fun project
 
 # roadmap
 
