@@ -13,7 +13,12 @@
           <td class="border px-4 py-2">{{ file.id }}</td>
           <td class="border px-4 py-2">{{ file.filename }}</td>
           <td class="border px-4 py-2">
-            <button class="border px-4 py-2 bg-gray-300">download</button>
+            <button
+              class="border px-4 py-2 bg-gray-300"
+              @click="redirectToUrl(file.url)"
+            >
+              download
+            </button>
           </td>
         </tr>
       </tbody>
@@ -41,6 +46,7 @@ export default {
             results.push({
               id: data[id].id,
               filename: data[id].filename,
+              url: data[id].url,
             });
           }
           this.files = results;
@@ -49,6 +55,9 @@ export default {
           console.log(error);
           this.error = "failed to fetch data";
         });
+    },
+    redirectToUrl(url) {
+      window.location.href = url;
     },
   },
   mounted() {

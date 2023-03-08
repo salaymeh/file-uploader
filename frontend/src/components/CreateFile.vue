@@ -1,22 +1,21 @@
 <template>
   <div class="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
     <form
-      @submit.prevent="uploadText"
+      @submit.prevent="uploadFile"
       class="mx-auto mt-8 mb-0 max-w-md space-y-4"
     >
       <div>
-        <label for="text" class="sr-only">Text to upload</label>
+        <label for="file" class="sr-only">File to upload</label>
 
         <div class="relative">
           <input
-            v-model="text"
-            type="text"
+            ref="fileInput"
+            type="file"
+            name="filename"
             class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
-            placeholder="Enter text to upload"
           />
         </div>
       </div>
-
       <div class="flex items-center justify-center">
         <button
           type="submit"
@@ -39,20 +38,38 @@ export default {
     };
   },
   methods: {
-    uploadText() {
-      const formData = new FormData();
-      formData.append("filename", this.text);
-
-      axios
-        .post("http://127.0.0.1:5000/upload", formData)
-        .then((response) => {
-          console.log(response);
-          // do something with the response
-        })
-        .catch((error) => {
-          console.log(error);
-          // handle the error
+    uploadFile() {
+      const file = this.$refs.fileInput.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const fileData = new Blob([reader.result], { type: file.type });
+        const formData = new FormData();
+        formData.append("filename", file.name);
+        formData.append("filedata", fileData, file.name); // include the actual file name
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`);
+        }
+        const uploadPromise = new Promise((resolve, reject) => {
+          axios
+            .post("http://127.0.0.1:5000/upload", formData)
+            .then((response) => {
+              resolve(response);
+            })
+            .catch((error) => {
+              reject(error);
+            });
         });
+        uploadPromise
+          .then((response) => {
+            console.log(response);
+            // do something with the response
+          })
+          .catch((error) => {
+            console.log(error);
+            // handle the error
+          });
+      };
+      reader.readAsArrayBuffer(file);
     },
   },
 };
