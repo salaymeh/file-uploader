@@ -22,8 +22,13 @@ def process_row(row):
     # Convert the row to a dictionary
     row_dict = {
         "id": row[0],
-        "filename": row[1],
-        "url":row[2]
+        "sample_name": row[1],
+        "sample_bpm":row[2],
+        "sample_key":row[3],
+        "sample_owner":row[4],
+        "s3_name":row[5],
+        "s3_link":row[6]
+
     }
     # Return the row as a JSON object
     return row_dict
@@ -46,11 +51,9 @@ def get_files():
     conn = get_db_conn()
     cur = conn.cursor()
     
-
-
     # Use a loop to fetch each set of rows and return them as a JSON object
     rows = []
-    cur.execute("SELECT * FROM files")
+    cur.execute("SELECT id,sample_name,sample_bpm,sample_key,sample_owner,s3_name,s3_link FROM files_final")
     for row in cur:
         row_dict = process_row(row)
         rows.append(row_dict)
@@ -71,7 +74,7 @@ def upload_file_to_s3(file_data, bucket_name, file_name):
                 'Bucket': bucket_name,
                 'Key': file_name
             },
-            ExpiresIn=None  # URL expires after 1 hour (3600 seconds)
+            ExpiresIn=None 
         )
     return url
 
